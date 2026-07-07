@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Web Metronome</title>
+    <meta name="theme-color" content="#101010" />
+    <meta name="description" content="Metrónomo web simple con setlist editable." />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell" aria-label="Metrónomo simple">
+      <header class="app-header">
+        <h1>Tempo</h1>
+        <button class="icon-button" id="muteButton" type="button" aria-label="Silenciar sonido">🔊</button>
+      </header>
+
+      <section class="beat-panel" aria-label="Indicador de pulsos">
+        <div class="led-row" id="ledRow">
+          <span class="led" aria-label="Pulso 1"></span>
+          <span class="led" aria-label="Pulso 2"></span>
+          <span class="led" aria-label="Pulso 3"></span>
+          <span class="led" aria-label="Pulso 4"></span>
+        </div>
+      </section>
+
+      <section class="tempo-panel" aria-label="Control de tempo">
+        <button class="step-button" id="bpmDown" type="button" aria-label="Bajar BPM">−</button>
+        <label class="bpm-control">
+          <span>BPM</span>
+          <input id="bpmInput" type="text" maxlength="3" value="120" inputmode="numeric" pattern="[0-9]*" />
+        </label>
+        <button class="step-button" id="bpmUp" type="button" aria-label="Subir BPM">+</button>
+      </section>
+
+      <section class="meter-panel" aria-label="Compás">
+        <label class="meter-control">
+          Compás
+          <select id="meterSelect">
+            <option value="2">2/4</option>
+            <option value="3">3/4</option>
+            <option value="4" selected>4/4</option>
+          </select>
+        </label>
+        <label class="wake-control" id="wakeControl">
+          <input id="wakeLockInput" type="checkbox" checked />
+          Pantalla encendida
+        </label>
+      </section>
+
+      <section class="setlist-panel" aria-label="Setlist">
+        <div class="setlist-head">
+          <h2>Setlist</h2>
+          <button id="addSongButton" type="button">Añadir</button>
+        </div>
+
+        <form class="song-form" id="songForm" hidden>
+          <input id="songNameInput" type="text" maxlength="36" placeholder="Nombre" aria-label="Nombre del tema" />
+          <input id="songBpmInput" type="number" min="30" max="300" value="120" aria-label="BPM del tema" />
+          <select id="songMeterInput" aria-label="Compás del tema">
+            <option value="2">2/4</option>
+            <option value="3">3/4</option>
+            <option value="4" selected>4/4</option>
+          </select>
+          <button type="submit">Guardar</button>
+        </form>
+
+        <ol class="song-list" id="songList"></ol>
+      </section>
+
+      <nav class="transport" aria-label="Controles de reproducción">
+        <button class="transport-button" id="previousButton" type="button" aria-label="Tema anterior">&lt;&lt;</button>
+        <button class="play-button" id="playButton" type="button" aria-label="Reproducir">▶</button>
+        <button class="transport-button" id="nextButton" type="button" aria-label="Tema siguiente">&gt;&gt;</button>
+      </nav>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
