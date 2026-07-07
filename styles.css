@@ -20,6 +20,7 @@
 
 body {
   min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
   display: grid;
   place-items: center;
@@ -46,10 +47,11 @@ button {
 .app-shell {
   width: min(100%, 430px);
   min-height: min(860px, calc(100vh - 48px));
+  min-height: min(860px, calc(100dvh - 48px));
   display: grid;
-  grid-template-rows: auto auto auto auto 1fr auto;
-  gap: 10px;
-  padding: 18px;
+  grid-template-rows: auto auto auto auto auto auto;
+  gap: 8px;
+  padding: 14px;
   border: 1px solid #2d2d2d;
   border-radius: 28px;
   background: linear-gradient(160deg, #1f1f1f 0%, #111 48%, #1b1b1b 100%);
@@ -60,7 +62,7 @@ button {
   display: grid;
   grid-template-columns: 1fr 48px;
   align-items: center;
-  min-height: 64px;
+  min-height: 50px;
   border-bottom: 3px solid var(--accent);
 }
 
@@ -69,9 +71,9 @@ button {
   padding-left: 48px;
   text-align: center;
   color: #e7e7e7;
-  font-size: 2.35rem;
+  font-size: 1.9rem;
   font-weight: 300;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -92,19 +94,19 @@ button {
 }
 
 .beat-panel {
-  padding: 44px 22px;
+  padding: 24px 20px;
 }
 
 .led-row {
   display: grid;
-  grid-template-columns: repeat(4, minmax(44px, 1fr));
-  gap: 22px;
+  grid-template-columns: repeat(4, minmax(38px, 1fr));
+  gap: 16px;
   align-items: center;
 }
 
 .led {
   aspect-ratio: 1;
-  max-width: 68px;
+  max-width: 56px;
   width: 100%;
   justify-self: center;
   border-radius: 50%;
@@ -133,9 +135,9 @@ button {
 .tempo-panel {
   display: grid;
   grid-template-columns: 76px 1fr 76px;
-  gap: 14px;
+  gap: 12px;
   align-items: center;
-  padding: 14px 0;
+  padding: 6px 0;
 }
 
 .step-button,
@@ -175,7 +177,7 @@ button {
   background: transparent;
   color: var(--text);
   text-align: center;
-  font-size: clamp(5rem, 24vw, 7.8rem);
+  font-size: clamp(4.4rem, 21vw, 6.8rem);
   font-weight: 200;
   line-height: 0.95;
   outline: none;
@@ -189,8 +191,10 @@ button {
 
 .meter-panel {
   display: grid;
-  gap: 10px;
-  padding: 12px 16px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 12px;
 }
 
 .meter-control {
@@ -207,7 +211,7 @@ button {
   align-items: center;
   gap: 10px;
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 0.86rem;
   font-weight: 700;
 }
 
@@ -232,8 +236,8 @@ select,
 }
 
 .setlist-panel {
-  --song-row-height: 52px;
-  height: calc(58px + (var(--song-row-height) * 4));
+  --song-row-height: 46px;
+  height: calc(50px + (var(--song-row-height) * 4));
   overflow: hidden;
 }
 
@@ -242,14 +246,14 @@ select,
   grid-template-columns: 1fr auto;
   align-items: center;
   gap: 12px;
-  padding: 12px 14px;
+  padding: 8px 12px;
   border-bottom: 1px solid #3e3e3e;
 }
 
 .setlist-head h2 {
   margin: 0;
   text-align: center;
-  font-size: 1.45rem;
+  font-size: 1.25rem;
   font-weight: 300;
 }
 
@@ -290,7 +294,7 @@ select,
   gap: 8px;
   align-items: center;
   height: var(--song-row-height);
-  padding: 8px 12px;
+  padding: 6px 10px;
   color: var(--muted);
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
@@ -375,9 +379,9 @@ select,
 .transport {
   display: grid;
   grid-template-columns: 1fr 1.35fr 1fr;
-  gap: 22px;
+  gap: 18px;
   align-items: center;
-  padding-top: 12px;
+  padding-top: 4px;
 }
 
 .transport-button {
@@ -415,26 +419,88 @@ select,
   }
 
   .app-shell {
+    width: 100%;
     min-height: 100vh;
+    min-height: 100dvh;
+    gap: 7px;
+    padding: 10px;
     border: 0;
     border-radius: 0;
   }
 
+  .app-header {
+    min-height: 42px;
+  }
+
   .app-header h1 {
-    font-size: 1.85rem;
+    font-size: 1.45rem;
   }
 
   .beat-panel {
-    padding-block: 34px;
+    padding: 14px 16px;
+  }
+
+  .led-row {
+    gap: 12px;
+  }
+
+  .led {
+    max-width: 44px;
   }
 
   .tempo-panel {
     grid-template-columns: 58px 1fr 58px;
+    gap: 8px;
+    padding: 0;
   }
 
   .step-button {
-    width: 58px;
-    height: 58px;
+    width: 52px;
+    height: 52px;
+    font-size: 2.1rem;
+    justify-self: center;
+  }
+
+  #bpmInput {
+    font-size: clamp(3.8rem, 20vw, 5.4rem);
+  }
+
+  .meter-panel {
+    padding: 7px 10px;
+  }
+
+  .meter-control {
+    gap: 10px;
+  }
+
+  .wake-control {
+    gap: 7px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .wake-control input {
+    width: 16px;
+    height: 16px;
+  }
+
+  select,
+  .song-form input {
+    min-height: 36px;
+  }
+
+  .setlist-panel {
+    --song-row-height: 44px;
+    height: calc(46px + (var(--song-row-height) * 4));
+  }
+
+  .setlist-head {
+    padding: 7px 10px;
+  }
+
+  .setlist-head button,
+  .song-form button {
+    min-height: 34px;
   }
 
   .song-form {
@@ -447,12 +513,14 @@ select,
   }
 
   .transport-button {
-    width: 72px;
-    height: 72px;
+    width: 62px;
+    height: 62px;
+    font-size: 1.55rem;
   }
 
   .play-button {
-    width: 94px;
-    height: 94px;
+    width: 78px;
+    height: 78px;
+    font-size: 2.55rem;
   }
 }

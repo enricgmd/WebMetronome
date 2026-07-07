@@ -36,21 +36,6 @@
         <button class="step-button" id="bpmUp" type="button" aria-label="Subir BPM">+</button>
       </section>
 
-      <section class="meter-panel" aria-label="Compás">
-        <label class="meter-control">
-          Compás
-          <select id="meterSelect">
-            <option value="2">2/4</option>
-            <option value="3">3/4</option>
-            <option value="4" selected>4/4</option>
-          </select>
-        </label>
-        <label class="wake-control" id="wakeControl">
-          <input id="wakeLockInput" type="checkbox" checked />
-          Pantalla encendida
-        </label>
-      </section>
-
       <section class="setlist-panel" aria-label="Setlist">
         <div class="setlist-head">
           <h2>Setlist</h2>
@@ -69,6 +54,21 @@
         </form>
 
         <ol class="song-list" id="songList"></ol>
+      </section>
+
+      <section class="meter-panel" aria-label="Compás">
+        <label class="meter-control">
+          Compás
+          <select id="meterSelect">
+            <option value="2">2/4</option>
+            <option value="3">3/4</option>
+            <option value="4" selected>4/4</option>
+          </select>
+        </label>
+        <label class="wake-control" id="wakeControl">
+          <input id="wakeLockInput" type="checkbox" checked />
+          Pantalla encendida
+        </label>
       </section>
 
       <nav class="transport" aria-label="Controles de reproducción">
