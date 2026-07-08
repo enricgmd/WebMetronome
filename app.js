@@ -18,7 +18,8 @@ const bpmInput = document.querySelector("#bpmInput");
 const meterSelect = document.querySelector("#meterSelect");
 const wakeControl = document.querySelector("#wakeControl");
 const wakeLockInput = document.querySelector("#wakeLockInput");
-const leds = [...document.querySelectorAll(".led")];
+const ledRow = document.querySelector("#ledRow");
+let leds = [];
 const playButton = document.querySelector("#playButton");
 const muteButton = document.querySelector("#muteButton");
 const previousButton = document.querySelector("#previousButton");
@@ -34,6 +35,7 @@ const songMeterInput = document.querySelector("#songMeterInput");
 
 syncControls();
 syncWakeLockSupport();
+renderLeds();
 renderSongs();
 registerServiceWorker();
 
@@ -63,6 +65,7 @@ bpmInput.addEventListener("keydown", (event) => {
 meterSelect.addEventListener("change", () => {
   state.meter = Number(meterSelect.value);
   currentBeat = 0;
+  renderLeds();
   clearLeds();
   saveState();
   renderSongs();
@@ -123,11 +126,14 @@ function togglePlayback() {
   start();
 }
 
-function start() {
+async function start() {
   audioContext = audioContext || new AudioContext();
+  await audioContext.resume();
   state.playing = true;
   appShell.classList.add("is-playing");
-  playButton.textContent = "⏸";
+  playButton.classList.add("stop-symbol");
+  playButton.textContent = "■";
+  playButton.setAttribute("aria-label", "Detener");
   currentBeat = 0;
   tick();
   timerId = window.setInterval(tick, beatDurationMs());
@@ -137,7 +143,9 @@ function start() {
 function stop() {
   state.playing = false;
   appShell.classList.remove("is-playing");
+  playButton.classList.remove("stop-symbol");
   playButton.textContent = "▶";
+  playButton.setAttribute("aria-label", "Reproducir");
   window.clearInterval(timerId);
   timerId = null;
   currentBeat = 0;
@@ -160,6 +168,18 @@ function pulseLed(beat) {
   led.classList.add(beat === 0 ? "accent" : "active");
 }
 
+function renderLeds() {
+  ledRow.innerHTML = "";
+  ledRow.style.setProperty("--beat-count", state.meter);
+  leds = Array.from({ length: state.meter }, (_, index) => {
+    const led = document.createElement("span");
+    led.className = "led";
+    led.setAttribute("aria-label", `Pulso ${index + 1}`);
+    ledRow.append(led);
+    return led;
+  });
+}
+
 function clearLeds() {
   leds.forEach((led) => led.classList.remove("active", "accent"));
 }
@@ -167,18 +187,33 @@ function clearLeds() {
 function playClick(accent) {
   const ctx = audioContext;
   const now = ctx.currentTime;
-  const oscillator = ctx.createOscillator();
-  const gain = ctx.createGain();
+  const output = ctx.createGain();
+  const filter = ctx.createBiquadFilter();
+  const oscA = ctx.createOscillator();
+  const oscB = ctx.createOscillator();
 
-  oscillator.type = "sine";
-  oscillator.frequency.setValueAtTime(accent ? 1420 : 930, now);
-  gain.gain.setValueAtTime(accent ? 0.44 : 0.25, now);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
+  output.gain.setValueAtTime(0.0001, now);
+  output.gain.exponentialRampToValueAtTime(accent ? 0.95 : 0.68, now + 0.004);
+  output.gain.exponentialRampToValueAtTime(0.001, now + (accent ? 0.13 : 0.09));
 
-  oscillator.connect(gain);
-  gain.connect(ctx.destination);
-  oscillator.start(now);
-  oscillator.stop(now + 0.06);
+  filter.type = "bandpass";
+  filter.frequency.setValueAtTime(accent ? 1850 : 1550, now);
+  filter.Q.setValueAtTime(7, now);
+
+  oscA.type = "square";
+  oscB.type = "square";
+  oscA.frequency.setValueAtTime(accent ? 760 : 620, now);
+  oscB.frequency.setValueAtTime(accent ? 1160 : 930, now);
+
+  oscA.connect(filter);
+  oscB.connect(filter);
+  filter.connect(output);
+  output.connect(ctx.destination);
+
+  oscA.start(now);
+  oscB.start(now);
+  oscA.stop(now + 0.14);
+  oscB.stop(now + 0.14);
 }
 
 function setTempo(value, options = {}) {
@@ -217,6 +252,7 @@ function applySong(index) {
   state.meter = song.meter;
   currentBeat = 0;
   syncControls();
+  renderLeds();
   restartTimer();
   clearLeds();
   saveState();

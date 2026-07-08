@@ -1,4 +1,4 @@
-const cacheName = "web-metronome-v1";
+const cacheName = "web-metronome-v2";
 const appShell = [
   "./",
   "./index.html",
