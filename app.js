@@ -12,6 +12,8 @@ let timerId = null;
 let currentBeat = 0;
 let editingSongIndex = null;
 let wakeLock = null;
+let clickSamplesPromise = null;
+let clickSamples = null;
 
 const appShell = document.querySelector(".app-shell");
 const bpmInput = document.querySelector("#bpmInput");
@@ -129,6 +131,7 @@ function togglePlayback() {
 async function start() {
   audioContext = audioContext || new AudioContext();
   await audioContext.resume();
+  await loadClickSamples();
   state.playing = true;
   appShell.classList.add("is-playing");
   playButton.classList.add("stop-symbol");
@@ -185,6 +188,42 @@ function clearLeds() {
 }
 
 function playClick(accent) {
+  if (clickSamples) {
+    const source = audioContext.createBufferSource();
+    source.buffer = accent ? clickSamples.downbeat : clickSamples.beat;
+    source.connect(audioContext.destination);
+    source.start();
+    return;
+  }
+
+  playFallbackClick(accent);
+}
+
+async function loadClickSamples() {
+  if (clickSamples || !audioContext) {
+    return;
+  }
+
+  clickSamplesPromise =
+    clickSamplesPromise ||
+    Promise.all([decodeClickSample("./audio/click-downbeat.wav"), decodeClickSample("./audio/click-beat.wav")])
+      .then(([downbeat, beat]) => {
+        clickSamples = { downbeat, beat };
+      })
+      .catch(() => {
+        clickSamples = null;
+      });
+
+  await clickSamplesPromise;
+}
+
+async function decodeClickSample(url) {
+  const response = await fetch(url);
+  const arrayBuffer = await response.arrayBuffer();
+  return audioContext.decodeAudioData(arrayBuffer);
+}
+
+function playFallbackClick(accent) {
   const ctx = audioContext;
   const now = ctx.currentTime;
   const output = ctx.createGain();

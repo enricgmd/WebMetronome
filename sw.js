@@ -1,4 +1,4 @@
-const cacheName = "web-metronome-v2";
+const cacheName = "web-metronome-v3";
 const appShell = [
   "./",
   "./index.html",
@@ -7,6 +7,8 @@ const appShell = [
   "./manifest.webmanifest",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
+  "./audio/click-downbeat.wav",
+  "./audio/click-beat.wav",
 ];
 
 self.addEventListener("install", (event) => {
